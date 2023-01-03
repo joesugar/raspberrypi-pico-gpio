@@ -9,7 +9,9 @@ set(CMAKE_CXX_STANDARD 17)
 
 pico_sdk_init()
 
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} 
+    main.cpp
+    Blink.hpp)
 
 # enable/disable usb/uart output
 pico_enable_stdio_usb(${PROJECT_NAME} 0)
