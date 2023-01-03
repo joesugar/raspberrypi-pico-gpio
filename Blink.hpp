@@ -3,10 +3,13 @@
 #include <map>
 #include <string>
 
+// For information on the Raspberry Pi Pico GPIOs, see
+// https://raspberrypi.github.io/pico-sdk-doxygen/group__hardware__gpio.html
+//
 class Blink
 {
 public:
-    // Connstructor
+    // Constructor
     //
     Blink(uint gpio_in_pin, uint gpio_out_pin)
         : gpio_in_pin_(gpio_in_pin)
@@ -19,8 +22,13 @@ public:
 
         gpio_init(gpio_in_pin);
         gpio_set_dir(gpio_in_pin, GPIO_IN);
+
+        uint32_t event_mask = GPIO_IRQ_EDGE_FALL | GPIO_IRQ_EDGE_RISE;
+        gpio_set_irq_enabled_with_callback(gpio_in_pin, event_mask, ENABLE, gpio_irq_callback);
     }
 
+    // Call this function to set and reset the gpio levels.
+    //
     auto run(uint count) -> void
     {
         std::map<uint, std::string> msg_map {
@@ -53,8 +61,20 @@ public:
 
 private:
 
-    const uint GPIO_HI = 1;
-    const uint GPIO_LO = 0;
+    // GPIO interrupt callback
+    // gpio         Which GPIO caused this interrupt
+    // event_mask   Which events caused this interrupt. See gpio_irq_level for details. 
+    //
+    static auto gpio_irq_callback(uint gpio, uint32_t event_mask) -> void
+    {
+        printf("Callback on GPIO %d\n", gpio);
+    }
+
+    static const uint GPIO_HI = 1;
+    static const uint GPIO_LO = 0;
+
+    static const bool ENABLE = true;
+    static const bool DISABLE = false;
 
     uint gpio_in_pin_;
     uint gpio_out_pin_;

@@ -5,8 +5,8 @@
 
 int main()
 {
-    const uint OUT_PIN = 14;
-    const uint IN_PIN  = 15;
+    static const uint OUT_PIN = 14;
+    static const uint IN_PIN  = 15;
 
     // Initialize the serial port.
     //
@@ -16,6 +16,6 @@ int main()
     blink.run(10);
     printf("\nDone!\n");
 
-    while (1);
+    while (true);
     return 0;
 }
